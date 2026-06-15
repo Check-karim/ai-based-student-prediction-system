@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}About — EduPredict AI{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1>About EduPredict AI</h1>
+        <p>Empowering students and educators with machine learning insights</p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container about-grid">
+        <div class="about-card">
+            <h2>Our Mission</h2>
+            <p>EduPredict AI was built to help students understand their academic trajectory early. By combining study behavior data with a Random Forest machine learning model, we provide early warnings and encouragement before grades slip.</p>
+        </div>
+        <div class="about-card">
+            <h2>The Technology</h2>
+            <p>Our prediction engine uses scikit-learn's Random Forest classifier trained on academic performance patterns. It evaluates six key factors:</p>
+            <ul class="about-list">
+                <li>Daily study hours</li>
+                <li>Class attendance rate</li>
+                <li>Previous GPA</li>
+                <li>Assignments completed</li>
+                <li>Extracurricular involvement</li>
+                <li>Sleep hours</li>
+            </ul>
+        </div>
+        <div class="about-card">
+            <h2>Performance Categories</h2>
+            <div class="tier-list">
+                <div class="tier tier-risk">
+                    <strong>At Risk</strong>
+                    <span>Needs immediate academic intervention</span>
+                </div>
+                <div class="tier tier-average">
+                    <strong>Average</strong>
+                    <span>On track with room for improvement</span>
+                </div>
+                <div class="tier tier-high">
+                    <strong>High Performer</strong>
+                    <span>Excellent academic trajectory</span>
+                </div>
+            </div>
+        </div>
+        <div class="about-card">
+            <h2>Who Can Use It?</h2>
+            <p><strong>Students</strong> can register, log in, run predictions, and view their history.</p>
+            <p><strong>Administrators</strong> have a dedicated dashboard to monitor all students and system-wide prediction analytics.</p>
+        </div>
+    </div>
+</section>
+{% endblock %}

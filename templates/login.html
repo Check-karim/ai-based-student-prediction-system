@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Login — EduPredict AI{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h1>Welcome Back</h1>
+                <p>Sign in to your account</p>
+            </div>
+            <form method="POST" class="auth-form">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Enter your username" required autofocus>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+            </form>
+            <p class="auth-footer">
+                Don't have an account? <a href="{{ url_for('register') }}">Register as a student</a>
+            </p>
+            <div class="auth-note">
+                <small>Admin login: username <code>admin</code> / password <code>admin</code></small>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

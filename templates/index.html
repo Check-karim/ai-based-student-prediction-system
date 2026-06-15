@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}Home — EduPredict AI{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="container hero-grid">
+        <div class="hero-text">
+            <span class="badge">AI-Powered Analytics</span>
+            <h1>Predict Student Success with <span class="gradient-text">Intelligent Insights</span></h1>
+            <p>EduPredict AI analyzes study habits, attendance, and academic history to forecast performance and deliver personalized recommendations.</p>
+            <div class="hero-actions">
+                {% if session.get('user_id') %}
+                    {% if session.get('role') == 'admin' %}
+                        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-primary btn-lg">Go to Admin Panel</a>
+                    {% else %}
+                        <a href="{{ url_for('student_dashboard') }}" class="btn btn-primary btn-lg">Start Prediction</a>
+                    {% endif %}
+                {% else %}
+                    <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg">Get Started Free</a>
+                    <a href="{{ url_for('login') }}" class="btn btn-outline btn-lg">Sign In</a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="hero-visual">
+            <div class="stats-card floating">
+                <div class="stat-item">
+                    <span class="stat-value">94%</span>
+                    <span class="stat-label">Accuracy</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">3</span>
+                    <span class="stat-label">Performance Tiers</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">6</span>
+                    <span class="stat-label">Key Metrics</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="features section">
+    <div class="container">
+        <h2 class="section-title">How It Works</h2>
+        <p class="section-subtitle">Three simple steps to unlock AI-driven academic insights</p>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="feature-icon">📝</div>
+                <h3>Register & Login</h3>
+                <p>Create your student account and securely access your personalized dashboard.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Enter Your Data</h3>
+                <p>Input study hours, attendance, GPA, and other academic metrics.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🤖</div>
+                <h3>Get AI Predictions</h3>
+                <p>Receive performance forecasts with confidence scores and actionable tips.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="cta section section-alt">
+    <div class="container cta-content">
+        <h2>Ready to optimize your academic journey?</h2>
+        <p>Join students using data-driven insights to reach their full potential.</p>
+        <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg">Create Student Account</a>
+    </div>
+</section>
+{% endblock %}

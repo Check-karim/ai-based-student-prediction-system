@@ -1,0 +1,67 @@
+# EduPredict AI — Cursor Rules
+
+## Project Overview
+
+This is a Flask-based student performance prediction web application. It uses MySQL for data storage and scikit-learn Random Forest for AI predictions.
+
+## Tech Stack
+
+- Python 3.9+
+- Flask 3.x
+- MySQL (via PyMySQL)
+- scikit-learn + joblib for ML
+- Jinja2 templates
+- Vanilla CSS/JS (no frontend framework)
+
+## Key Files
+
+- `app.py` — Flask routes and app entry point
+- `db.py` — All database operations
+- `config.py` — Configuration constants
+- `ml/predictor.py` — ML model training and prediction
+- `database.sql` — SQL schema reference
+- `templates/` — Jinja2 HTML templates
+- `static/` — CSS and JavaScript assets
+
+## Coding Conventions
+
+1. **Python style**: Follow PEP 8. Use type hints where helpful.
+2. **Database**: Always use `get_db()` context manager from `db.py` for transactions.
+3. **Auth**: Use `@login_required(role="student")` or `@login_required(role="admin")` decorators.
+4. **Templates**: Extend `base.html`. Use `url_for()` for all links.
+5. **Flash messages**: Use categories: `success`, `danger`, `warning`, `info`.
+6. **CSS**: Use CSS variables from `:root` in `style.css`. Keep the indigo/slate color scheme.
+7. **No over-engineering**: Keep changes minimal and focused.
+
+## User Roles
+
+- **Student**: Can register, login, run predictions, view own history
+- **Admin**: Predefined credentials (admin/admin). Cannot register. Views all students and predictions.
+
+## Adding Features
+
+- New routes go in `app.py`
+- New DB queries go in `db.py`
+- New pages need a template in `templates/` extending `base.html`
+- Update `database.sql` if schema changes
+- Update README.md for user-facing changes
+
+## Running Locally
+
+```bash
+pip install -r requirements.txt
+python app.py
+```
+
+## Security Notes
+
+- Change `SECRET_KEY` in production
+- Change default admin password in production
+- Passwords are hashed with werkzeug `generate_password_hash`
+
+## Do Not
+
+- Commit `models/*.joblib` unless explicitly needed
+- Add heavy frontend frameworks without discussion
+- Store plaintext passwords
+- Allow admin self-registration

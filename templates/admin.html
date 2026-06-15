@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard — EduPredict AI{% endblock %}
+
+{% block content %}
+<section class="page-header page-header-admin">
+    <div class="container page-header-row">
+        <div>
+            <h1>Admin Dashboard</h1>
+            <p>System overview and student management</p>
+        </div>
+        <div class="report-actions">
+            <a href="{{ url_for('admin_download_report', report_format='excel') }}" class="btn btn-outline btn-sm">
+                Download Excel
+            </a>
+            <a href="{{ url_for('admin_download_report', report_format='pdf') }}" class="btn btn-primary btn-sm">
+                Download PDF
+            </a>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="stat-card-value">{{ stats.student_count }}</span>
+                <span class="stat-card-label">Registered Students</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-card-value">{{ stats.prediction_count }}</span>
+                <span class="stat-card-label">Total Predictions</span>
+            </div>
+            <div class="stat-card stat-risk">
+                <span class="stat-card-value">{{ stats.at_risk_count }}</span>
+                <span class="stat-card-label">At Risk Predictions</span>
+            </div>
+            <div class="stat-card stat-success">
+                <span class="stat-card-value">{{ stats.high_performer_count }}</span>
+                <span class="stat-card-label">High Performers</span>
+            </div>
+        </div>
+
+        <div class="admin-grid">
+            <div class="card">
+                <h2>Registered Students</h2>
+                {% if students %}
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Username</th>
+                                <th>Student ID</th>
+                                <th>Department</th>
+                                <th>Year</th>
+                                <th>Joined</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student in students %}
+                            <tr>
+                                <td>{{ student.full_name }}</td>
+                                <td>{{ student.username }}</td>
+                                <td>{{ student.student_id or '—' }}</td>
+                                <td>{{ student.department or '—' }}</td>
+                                <td>{{ student.year_of_study or '—' }}</td>
+                                <td>{{ student.created_at[:10] }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="empty-state">No students registered yet.</p>
+                {% endif %}
+            </div>
+
+            <div class="card">
+                <h2>Recent Predictions</h2>
+                {% if predictions %}
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Result</th>
+                                <th>Confidence</th>
+                                <th>GPA</th>
+                                <th>Attendance</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for pred in predictions %}
+                            <tr>
+                                <td>{{ pred.full_name or pred.username }}</td>
+                                <td><span class="badge-result badge-{{ pred.predicted_result | lower | replace(' ', '-') }}">{{ pred.predicted_result }}</span></td>
+                                <td>{{ pred.confidence_score }}%</td>
+                                <td>{{ pred.previous_gpa }}</td>
+                                <td>{{ pred.attendance_rate }}%</td>
+                                <td>{{ pred.created_at[:10] }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="empty-state">No predictions recorded yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

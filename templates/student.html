@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block title %}Student Dashboard — EduPredict AI{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1>Student Dashboard</h1>
+        <p>Welcome, {{ user.full_name or user.username }} · {{ profile.department if profile else 'Student' }}</p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container dashboard-grid">
+        <div class="dashboard-main">
+            <div class="card">
+                <h2>Run AI Prediction</h2>
+                <p class="card-subtitle">Enter your academic metrics to get a performance forecast</p>
+                <form method="POST" class="prediction-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="study_hours">Study Hours (per day)</label>
+                            <input type="number" id="study_hours" name="study_hours" step="0.5" min="0" max="16" value="5" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="attendance_rate">Attendance Rate (%)</label>
+                            <input type="number" id="attendance_rate" name="attendance_rate" step="1" min="0" max="100" value="85" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="previous_gpa">Previous GPA (0–4.0)</label>
+                            <input type="number" id="previous_gpa" name="previous_gpa" step="0.1" min="0" max="4" value="3.0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="assignments_completed">Assignments Completed (out of 20)</label>
+                            <input type="number" id="assignments_completed" name="assignments_completed" step="1" min="0" max="20" value="15" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="extracurricular_hours">Extracurricular Hours (per week)</label>
+                            <input type="number" id="extracurricular_hours" name="extracurricular_hours" step="0.5" min="0" max="30" value="3" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="sleep_hours">Sleep Hours (per night)</label>
+                            <input type="number" id="sleep_hours" name="sleep_hours" step="0.5" min="3" max="12" value="7" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Generate Prediction</button>
+                </form>
+            </div>
+
+            {% if prediction_result %}
+            <div class="card result-card result-{{ prediction_result.result | lower | replace(' ', '-') }}">
+                <h2>Prediction Result</h2>
+                <div class="result-main">
+                    <span class="result-label">{{ prediction_result.result }}</span>
+                    <span class="result-confidence">{{ prediction_result.confidence }}% confidence</span>
+                </div>
+                <div class="recommendations">
+                    <h3>Recommendations</h3>
+                    <ul>
+                        {% for tip in prediction_result.recommendations %}
+                        <li>{{ tip }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <aside class="dashboard-sidebar">
+            <div class="card profile-card">
+                <h3>Your Profile</h3>
+                {% if profile %}
+                <dl class="profile-list">
+                    <dt>Student ID</dt><dd>{{ profile.student_id }}</dd>
+                    <dt>Department</dt><dd>{{ profile.department }}</dd>
+                    <dt>Year</dt><dd>Year {{ profile.year_of_study }}</dd>
+                    <dt>Email</dt><dd>{{ user.email }}</dd>
+                </dl>
+                {% endif %}
+            </div>
+
+            <div class="card">
+                <h3>Prediction History</h3>
+                {% if history %}
+                <div class="history-list">
+                    {% for item in history %}
+                    <div class="history-item history-{{ item.predicted_result | lower | replace(' ', '-') }}">
+                        <span class="history-result">{{ item.predicted_result }}</span>
+                        <span class="history-meta">{{ item.confidence_score }}% · {{ item.created_at[:10] }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="empty-state">No predictions yet. Run your first analysis above!</p>
+                {% endif %}
+            </div>
+        </aside>
+    </div>
+</section>
+{% endblock %}
