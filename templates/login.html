@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Login — EduPredict AI{% endblock %}
+{% block title %}Login — {{ university_short }}{% endblock %}
 
 {% block content %}
 <section class="auth-section">
@@ -7,7 +7,7 @@
         <div class="auth-card">
             <div class="auth-header">
                 <h1>Welcome Back</h1>
-                <p>Sign in to your account</p>
+                <p>Sign in to {{ university_name }} {{ app_name }}</p>
             </div>
             <form method="POST" class="auth-form">
                 <div class="form-group">
@@ -21,10 +21,10 @@
                 <button type="submit" class="btn btn-primary btn-block">Sign In</button>
             </form>
             <p class="auth-footer">
-                Don't have an account? <a href="{{ url_for('register') }}">Register as a student</a>
+                Don't have an account? <a href="{{ url_for('register') }}">Register as an {{ university_short }} student</a>
             </p>
             <div class="auth-note">
-                <small>Admin login: username <code>admin</code> / password <code>admin</code></small>
+                <small>{{ university_short }} admin: username <code>admin</code> / password <code>admin</code></small>
             </div>
         </div>
     </div>

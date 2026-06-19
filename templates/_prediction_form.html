@@ -1,0 +1,33 @@
+<form method="POST" class="prediction-form">
+    <div class="form-row">
+        <div class="form-group">
+            <label for="study_hours">Study Hours (per day)</label>
+            <input type="number" id="study_hours" name="study_hours" step="0.5" min="0" max="16" value="5" required>
+        </div>
+        <div class="form-group">
+            <label for="attendance_rate">Attendance Rate (%)</label>
+            <input type="number" id="attendance_rate" name="attendance_rate" step="1" min="0" max="100" value="85" required>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group">
+            <label for="previous_gpa">Previous GPA (0–4.0)</label>
+            <input type="number" id="previous_gpa" name="previous_gpa" step="0.1" min="0" max="4" value="3.0" required>
+        </div>
+        <div class="form-group">
+            <label for="assignments_completed">Assignments Completed (out of 20)</label>
+            <input type="number" id="assignments_completed" name="assignments_completed" step="1" min="0" max="20" value="15" required>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group">
+            <label for="extracurricular_hours">Extracurricular Hours (per week)</label>
+            <input type="number" id="extracurricular_hours" name="extracurricular_hours" step="0.5" min="0" max="30" value="3" required>
+        </div>
+        <div class="form-group">
+            <label for="sleep_hours">Sleep Hours (per night)</label>
+            <input type="number" id="sleep_hours" name="sleep_hours" step="0.5" min="3" max="12" value="7" required>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Generate Prediction</button>
+</form>

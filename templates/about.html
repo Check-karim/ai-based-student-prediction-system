@@ -1,11 +1,11 @@
 {% extends "base.html" %}
-{% block title %}About — EduPredict AI{% endblock %}
+{% block title %}About — {{ university_short }}{% endblock %}
 
 {% block content %}
 <section class="page-header">
     <div class="container">
-        <h1>About EduPredict AI</h1>
-        <p>Empowering students and educators with machine learning insights</p>
+        <h1>About {{ app_name }}</h1>
+        <p>Empowering {{ university_name }} students and administrators with machine learning insights</p>
     </div>
 </section>
 
@@ -13,7 +13,7 @@
     <div class="container about-grid">
         <div class="about-card">
             <h2>Our Mission</h2>
-            <p>EduPredict AI was built to help students understand their academic trajectory early. By combining study behavior data with a Random Forest machine learning model, we provide early warnings and encouragement before grades slip.</p>
+            <p>{{ app_name }} was built for {{ university_name }} to help students understand their academic trajectory early. By combining study behavior data with a Random Forest machine learning model, we provide early warnings and encouragement before grades slip — supporting {{ university_short }}'s goal of producing skilled, employable graduates.</p>
         </div>
         <div class="about-card">
             <h2>The Technology</h2>
@@ -46,8 +46,12 @@
         </div>
         <div class="about-card">
             <h2>Who Can Use It?</h2>
-            <p><strong>Students</strong> can register, log in, run predictions, and view their history.</p>
-            <p><strong>Administrators</strong> have a dedicated dashboard to monitor all students and system-wide prediction analytics.</p>
+            <p><strong>Students</strong> register with their {{ university_short }} department, run predictions on their dashboard, and view their personal history.</p>
+            <p><strong>Administrators</strong> monitor all registered students and system-wide analytics, and can run the same prediction tool for demos, advising, or model validation.</p>
+        </div>
+        <div class="about-card">
+            <h2>{{ university_name }}</h2>
+            <p>Mount Kigali University (MKU) is a private university in Kigali, Rwanda, offering programmes across Business, IT, Education, Hospitality, Health Sciences, and Law. This system is integrated with {{ university_short }} student profiles — department, year of study, and student ID — so predictions are tied to the institution's academic structure.</p>
         </div>
     </div>
 </section>

@@ -1,0 +1,15 @@
+<div class="card">
+    <h3>Prediction History</h3>
+    {% if history %}
+    <div class="history-list">
+        {% for item in history %}
+        <div class="history-item history-{{ item.predicted_result | lower | replace(' ', '-') }}">
+            <span class="history-result">{{ item.predicted_result }}</span>
+            <span class="history-meta">{{ item.confidence_score }}% · {{ item.created_at[:10] }}</span>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="empty-state">No predictions yet. Run your first analysis above!</p>
+    {% endif %}
+</div>

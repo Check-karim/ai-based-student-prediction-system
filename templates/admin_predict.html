@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Run Prediction — {{ university_short }} Admin{% endblock %}
+
+{% block content %}
+<section class="page-header page-header-admin">
+    <div class="container page-header-row">
+        <div>
+            <h1>Admin Prediction Tool</h1>
+            <p>Run the same AI performance forecast used by {{ university_name }} students</p>
+        </div>
+        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline btn-sm">Back to Overview</a>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container dashboard-grid">
+        <div class="dashboard-main">
+            <div class="card">
+                <h2>Run AI Prediction</h2>
+                <p class="card-subtitle">
+                    Enter academic metrics to simulate a student forecast. Useful for demos, advising scenarios, or validating model output.
+                </p>
+                {% include "_prediction_form.html" %}
+            </div>
+
+            {% if prediction_result %}
+            {% include "_prediction_result.html" %}
+            {% endif %}
+        </div>
+
+        <aside class="dashboard-sidebar">
+            <div class="card profile-card">
+                <h3>Administrator</h3>
+                <dl class="profile-list">
+                    <dt>Name</dt><dd>{{ user.full_name or user.username }}</dd>
+                    <dt>Role</dt><dd>System Administrator</dd>
+                    <dt>Institution</dt><dd>{{ university_name }}</dd>
+                    <dt>Email</dt><dd>{{ user.email }}</dd>
+                </dl>
+            </div>
+
+            {% include "_prediction_history.html" %}
+        </aside>
+    </div>
+</section>
+{% endblock %}

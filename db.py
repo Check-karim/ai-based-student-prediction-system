@@ -16,6 +16,7 @@ from config import (
     MYSQL_PORT,
     MYSQL_USER,
     SQL_SCHEMA_PATH,
+    UNIVERSITY_EMAIL_DOMAIN,
 )
 
 
@@ -131,7 +132,7 @@ def init_db():
                        VALUES (%s, %s, %s, 'admin', 'System Administrator')""",
                     (
                         ADMIN_USERNAME,
-                        "admin@studentprediction.local",
+                        f"admin@{UNIVERSITY_EMAIL_DOMAIN}",
                         generate_password_hash(ADMIN_PASSWORD),
                     ),
                 )

@@ -1,13 +1,13 @@
 {% extends "base.html" %}
-{% block title %}Register — EduPredict AI{% endblock %}
+{% block title %}Register — {{ university_short }}{% endblock %}
 
 {% block content %}
 <section class="auth-section">
     <div class="container">
         <div class="auth-card auth-card-wide">
             <div class="auth-header">
-                <h1>Create Student Account</h1>
-                <p>Register to access AI-powered performance predictions</p>
+                <h1>{{ university_short }} Student Registration</h1>
+                <p>Create your account to access AI-powered performance predictions at {{ university_name }}</p>
             </div>
             <form method="POST" class="auth-form" id="registerForm" novalidate>
                 <div class="form-row">
@@ -20,7 +20,7 @@
                     </div>
                     <div class="form-group">
                         <label for="student_id">Student ID</label>
-                        <input type="text" id="student_id" name="student_id" placeholder="STU-2026-001" required>
+                        <input type="text" id="student_id" name="student_id" placeholder="MKU-2026-001" required>
                     </div>
                 </div>
                 <div class="form-row">
@@ -33,17 +33,22 @@
                     </div>
                     <div class="form-group">
                         <label for="email">Email</label>
-                        <input type="email" id="email" name="email" placeholder="john@university.edu"
+                        <input type="email" id="email" name="email" placeholder="john@{{ university_email_domain }}"
                                pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
                                title="Enter a valid email address"
                                required>
-                        <span class="field-hint">e.g. name@university.edu</span>
+                        <span class="field-hint">Use your {{ university_short }} email, e.g. name@{{ university_email_domain }}</span>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
                         <label for="department">Department</label>
-                        <input type="text" id="department" name="department" placeholder="Computer Science" required>
+                        <select id="department" name="department" required>
+                            <option value="" disabled selected>Select your department</option>
+                            {% for dept in mku_departments %}
+                            <option value="{{ dept }}">{{ dept }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="year_of_study">Year of Study</label>

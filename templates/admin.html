@@ -1,14 +1,15 @@
 {% extends "base.html" %}
-{% block title %}Admin Dashboard — EduPredict AI{% endblock %}
+{% block title %}Admin Dashboard — {{ university_short }}{% endblock %}
 
 {% block content %}
 <section class="page-header page-header-admin">
     <div class="container page-header-row">
         <div>
             <h1>Admin Dashboard</h1>
-            <p>System overview and student management</p>
+            <p>{{ university_name }} — system overview and student analytics</p>
         </div>
         <div class="report-actions">
+            <a href="{{ url_for('admin_predict') }}" class="btn btn-outline btn-sm">Run Prediction</a>
             <a href="{{ url_for('admin_download_report', report_format='excel') }}" class="btn btn-outline btn-sm">
                 Download Excel
             </a>

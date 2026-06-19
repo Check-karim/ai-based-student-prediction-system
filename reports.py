@@ -7,6 +7,8 @@ from fpdf import FPDF
 from openpyxl import Workbook
 from openpyxl.styles import Font
 
+from config import UNIVERSITY_NAME, UNIVERSITY_SHORT
+
 
 def _timestamp() -> str:
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -20,7 +22,7 @@ def generate_excel_report(stats: dict, students: list, predictions: list) -> Byt
     title_font = Font(bold=True, size=14)
     header_font = Font(bold=True)
 
-    ws_summary["A1"] = "EduPredict AI — Admin Report"
+    ws_summary["A1"] = f"{UNIVERSITY_NAME} — Admin Report"
     ws_summary["A1"].font = title_font
     ws_summary["A2"] = f"Generated: {_timestamp()}"
     ws_summary.append([])
@@ -105,7 +107,7 @@ def generate_pdf_report(stats: dict, students: list, predictions: list) -> Bytes
     pdf.set_auto_page_break(auto=True, margin=15)
     pdf.add_page()
     pdf.set_font("Helvetica", "B", 16)
-    pdf.cell(0, 10, "EduPredict AI - Admin Report", new_x="LMARGIN", new_y="NEXT", align="C")
+    pdf.cell(0, 10, f"{UNIVERSITY_SHORT} - Admin Report", new_x="LMARGIN", new_y="NEXT", align="C")
     pdf.set_font("Helvetica", "", 10)
     pdf.cell(0, 6, f"Generated: {_timestamp()}", new_x="LMARGIN", new_y="NEXT", align="C")
     pdf.ln(4)

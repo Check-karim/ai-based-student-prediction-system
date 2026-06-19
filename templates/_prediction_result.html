@@ -1,0 +1,15 @@
+<div class="card result-card result-{{ prediction_result.result | lower | replace(' ', '-') }}">
+    <h2>Prediction Result</h2>
+    <div class="result-main">
+        <span class="result-label">{{ prediction_result.result }}</span>
+        <span class="result-confidence">{{ prediction_result.confidence }}% confidence</span>
+    </div>
+    <div class="recommendations">
+        <h3>Recommendations</h3>
+        <ul>
+            {% for tip in prediction_result.recommendations %}
+            <li>{{ tip }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>

@@ -1,4 +1,4 @@
-"""Student Prediction System — Flask web application."""
+"""Mount Kigali University — Student Performance Predictor (Flask app)."""
 
 from functools import wraps
 
@@ -13,7 +13,14 @@ from flask import (
     url_for,
 )
 
-from config import SECRET_KEY
+from config import (
+    APP_NAME,
+    MKU_DEPARTMENTS,
+    SECRET_KEY,
+    UNIVERSITY_EMAIL_DOMAIN,
+    UNIVERSITY_NAME,
+    UNIVERSITY_SHORT,
+)
 from db import (
     authenticate_user,
     create_student,
@@ -34,6 +41,50 @@ from validators import validate_email, validate_full_name, validate_username
 
 app = Flask(__name__)
 app.secret_key = SECRET_KEY
+
+
+@app.context_processor
+def inject_university_config():
+    return {
+        "app_name": APP_NAME,
+        "university_name": UNIVERSITY_NAME,
+        "university_short": UNIVERSITY_SHORT,
+        "university_email_domain": UNIVERSITY_EMAIL_DOMAIN,
+        "mku_departments": MKU_DEPARTMENTS,
+    }
+
+
+def _process_prediction_form(user_id):
+    """Parse form, run ML prediction, save result. Returns (result_dict|None, error_flashed)."""
+    try:
+        inputs = {
+            "study_hours": float(request.form.get("study_hours", 0)),
+            "attendance_rate": float(request.form.get("attendance_rate", 0)),
+            "previous_gpa": float(request.form.get("previous_gpa", 0)),
+            "assignments_completed": int(request.form.get("assignments_completed", 0)),
+            "extracurricular_hours": float(request.form.get("extracurricular_hours", 0)),
+            "sleep_hours": float(request.form.get("sleep_hours", 0)),
+        }
+
+        if not (0 <= inputs["attendance_rate"] <= 100):
+            flash("Attendance rate must be between 0 and 100.", "danger")
+            return None, True
+        if not (0 <= inputs["previous_gpa"] <= 4.0):
+            flash("GPA must be between 0 and 4.0.", "danger")
+            return None, True
+
+        prediction_result = predict_student_performance(**inputs)
+        save_prediction(
+            user_id,
+            inputs,
+            prediction_result["result"],
+            prediction_result["confidence"],
+        )
+        flash("Prediction completed successfully!", "success")
+        return prediction_result, False
+    except (ValueError, TypeError):
+        flash("Please enter valid numeric values.", "danger")
+        return None, True
 
 
 def login_required(role=None):
@@ -175,37 +226,34 @@ def student_dashboard():
     history = get_student_predictions(user["id"])
 
     if request.method == "POST":
-        try:
-            inputs = {
-                "study_hours": float(request.form.get("study_hours", 0)),
-                "attendance_rate": float(request.form.get("attendance_rate", 0)),
-                "previous_gpa": float(request.form.get("previous_gpa", 0)),
-                "assignments_completed": int(request.form.get("assignments_completed", 0)),
-                "extracurricular_hours": float(request.form.get("extracurricular_hours", 0)),
-                "sleep_hours": float(request.form.get("sleep_hours", 0)),
-            }
-
-            if not (0 <= inputs["attendance_rate"] <= 100):
-                flash("Attendance rate must be between 0 and 100.", "danger")
-            elif not (0 <= inputs["previous_gpa"] <= 4.0):
-                flash("GPA must be between 0 and 4.0.", "danger")
-            else:
-                prediction_result = predict_student_performance(**inputs)
-                save_prediction(
-                    user["id"],
-                    inputs,
-                    prediction_result["result"],
-                    prediction_result["confidence"],
-                )
-                history = get_student_predictions(user["id"])
-                flash("Prediction completed successfully!", "success")
-        except (ValueError, TypeError):
-            flash("Please enter valid numeric values.", "danger")
+        prediction_result, _ = _process_prediction_form(user["id"])
+        if prediction_result:
+            history = get_student_predictions(user["id"])
 
     return render_template(
         "student.html",
         user=user,
         profile=profile,
+        prediction_result=prediction_result,
+        history=history,
+    )
+
+
+@app.route("/admin/predict", methods=["GET", "POST"])
+@login_required(role="admin")
+def admin_predict():
+    user = get_user_by_id(session["user_id"])
+    prediction_result = None
+    history = get_student_predictions(user["id"], limit=10)
+
+    if request.method == "POST":
+        prediction_result, _ = _process_prediction_form(user["id"])
+        if prediction_result:
+            history = get_student_predictions(user["id"], limit=10)
+
+    return render_template(
+        "admin_predict.html",
+        user=user,
         prediction_result=prediction_result,
         history=history,
     )
@@ -238,7 +286,7 @@ def admin_download_report(report_format):
             buffer,
             mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
             as_attachment=True,
-            download_name="edupredict_report.xlsx",
+            download_name="mku_prediction_report.xlsx",
         )
 
     if report_format == "pdf":
@@ -247,7 +295,7 @@ def admin_download_report(report_format):
             buffer,
             mimetype="application/pdf",
             as_attachment=True,
-            download_name="edupredict_report.pdf",
+            download_name="mku_prediction_report.pdf",
         )
 
     flash("Invalid report format.", "danger")

@@ -1,22 +1,23 @@
 {% extends "base.html" %}
-{% block title %}Home — EduPredict AI{% endblock %}
+{% block title %}Home — {{ university_short }}{% endblock %}
 
 {% block content %}
 <section class="hero">
     <div class="container hero-grid">
         <div class="hero-text">
-            <span class="badge">AI-Powered Analytics</span>
-            <h1>Predict Student Success with <span class="gradient-text">Intelligent Insights</span></h1>
-            <p>EduPredict AI analyzes study habits, attendance, and academic history to forecast performance and deliver personalized recommendations.</p>
+            <span class="badge">{{ university_short }} · AI-Powered Analytics</span>
+            <h1>Predict Student Success at <span class="gradient-text">{{ university_name }}</span></h1>
+            <p>{{ app_name }} analyzes study habits, attendance, and academic history to forecast performance and deliver personalized recommendations for {{ university_short }} students.</p>
             <div class="hero-actions">
                 {% if session.get('user_id') %}
                     {% if session.get('role') == 'admin' %}
-                        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-primary btn-lg">Go to Admin Panel</a>
+                        <a href="{{ url_for('admin_predict') }}" class="btn btn-primary btn-lg">Run Prediction</a>
+                        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline btn-lg">Admin Overview</a>
                     {% else %}
                         <a href="{{ url_for('student_dashboard') }}" class="btn btn-primary btn-lg">Start Prediction</a>
                     {% endif %}
                 {% else %}
-                    <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg">Get Started Free</a>
+                    <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg">Register as {{ university_short }} Student</a>
                     <a href="{{ url_for('login') }}" class="btn btn-outline btn-lg">Sign In</a>
                 {% endif %}
             </div>
@@ -42,23 +43,23 @@
 
 <section class="features section">
     <div class="container">
-        <h2 class="section-title">How It Works</h2>
+        <h2 class="section-title">How It Works at {{ university_short }}</h2>
         <p class="section-subtitle">Three simple steps to unlock AI-driven academic insights</p>
         <div class="feature-grid">
             <div class="feature-card">
                 <div class="feature-icon">📝</div>
                 <h3>Register & Login</h3>
-                <p>Create your student account and securely access your personalized dashboard.</p>
+                <p>Create your {{ university_short }} student account with your department and student ID, then access your dashboard.</p>
             </div>
             <div class="feature-card">
                 <div class="feature-icon">📊</div>
                 <h3>Enter Your Data</h3>
-                <p>Input study hours, attendance, GPA, and other academic metrics.</p>
+                <p>Input study hours, attendance, GPA, assignments, extracurriculars, and sleep metrics.</p>
             </div>
             <div class="feature-card">
                 <div class="feature-icon">🤖</div>
                 <h3>Get AI Predictions</h3>
-                <p>Receive performance forecasts with confidence scores and actionable tips.</p>
+                <p>Receive performance forecasts with confidence scores and actionable recommendations.</p>
             </div>
         </div>
     </div>
@@ -66,8 +67,8 @@
 
 <section class="cta section section-alt">
     <div class="container cta-content">
-        <h2>Ready to optimize your academic journey?</h2>
-        <p>Join students using data-driven insights to reach their full potential.</p>
+        <h2>Ready to optimize your academic journey at {{ university_name }}?</h2>
+        <p>Join {{ university_short }} students using data-driven insights to reach their full potential.</p>
         <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg">Create Student Account</a>
     </div>
 </section>
