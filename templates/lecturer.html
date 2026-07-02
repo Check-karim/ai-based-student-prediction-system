@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}Lecturer Dashboard — {{ university_short }}{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1>Lecturer Dashboard</h1>
+        <p>Welcome, {{ user.full_name or user.username }}
+            {% if profile %}· {{ profile.department }}{% endif %}
+            · {{ university_name }}</p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="admin-grid">
+            <div class="card">
+                <h2>Create Class</h2>
+                <p class="card-subtitle">Set up a new class — class code is assigned automatically (e.g. CLS-2026-001)</p>
+                <form method="POST" class="form-grid form-grid-2">
+                    <div class="form-group">
+                        <label for="name">Class Name</label>
+                        <input type="text" id="name" name="name" required class="form-control" placeholder="e.g. BSc IT Year 2">
+                    </div>
+                    <div class="form-group">
+                        <label for="department">Department</label>
+                        <select id="department" name="department" required class="form-control">
+                            <option value="">Select department…</option>
+                            {% for dept in mku_departments %}
+                            <option value="{{ dept }}" {% if profile and profile.department == dept %}selected{% endif %}>{{ dept }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="academic_year">Academic Year</label>
+                        <input type="text" id="academic_year" name="academic_year" class="form-control" placeholder="e.g. 2025/2026">
+                    </div>
+                    <div class="form-group">
+                        <label for="semester">Semester</label>
+                        <input type="text" id="semester" name="semester" class="form-control" placeholder="e.g. Semester 1">
+                    </div>
+                    <div class="form-group form-group-full">
+                        <button type="submit" class="btn btn-primary">Create Class</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card">
+                <h2>My Classes</h2>
+                <p class="card-subtitle">Manage students, course marks, and attendance</p>
+                {% if classes %}
+                <div class="class-grid class-grid-compact">
+                    {% for cls in classes %}
+                    <a href="{{ url_for('lecturer_class_detail', class_id=cls.id) }}" class="class-card">
+                        <h3>{{ cls.name }}</h3>
+                        <p class="class-code">{{ cls.code }}</p>
+                        <p class="class-meta">{{ cls.department }} · {{ cls.student_count }} students</p>
+                        {% if cls.semester %}<p class="class-meta">{{ cls.academic_year }} · {{ cls.semester }}</p>{% endif %}
+                    </a>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="empty-state">No classes yet. Create your first class using the form on the left.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

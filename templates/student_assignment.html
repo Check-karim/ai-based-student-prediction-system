@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}{{ assignment.title }} — {{ university_short }}{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container page-header-row">
+        <div>
+            <h1>{{ assignment.title }}</h1>
+            <p>{{ assignment.course_name }} · {{ assignment.class_name }} · Max score: {{ assignment.max_score }}</p>
+        </div>
+        <a href="{{ url_for('student_assignments') }}" class="btn btn-outline btn-sm">← All Assignments</a>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container dashboard-grid">
+        <div class="dashboard-main">
+            <div class="card">
+                <h2>Assignment Details</h2>
+                <dl class="profile-list">
+                    <dt>Deadline</dt>
+                    <dd>{{ assignment.deadline[:16] }}</dd>
+                    <dt>Status</dt>
+                    <dd>
+                        {% if submission and submission.score is not none %}
+                        <span class="badge-result badge-high-performer">Graded</span>
+                        {% elif submission %}
+                        <span class="badge-result badge-average">Submitted — awaiting grade</span>
+                        {% elif is_open %}
+                        <span class="badge-result badge-high-performer">Open</span>
+                        {% else %}
+                        <span class="badge-result badge-at-risk">Closed</span>
+                        {% endif %}
+                    </dd>
+                </dl>
+                {% if assignment.description %}
+                <h3 class="mt-md">Instructions</h3>
+                <p class="assignment-description">{{ assignment.description }}</p>
+                {% endif %}
+            </div>
+
+            {% if submission and submission.score is not none %}
+            <div class="card mt-lg">
+                <h2>Your Mark</h2>
+                <p class="grade-display">{{ submission.score }} / {{ assignment.max_score }}</p>
+                {% if submission.feedback %}
+                <h3 class="mt-md">Lecturer Feedback</h3>
+                <p>{{ submission.feedback }}</p>
+                {% endif %}
+                <p class="text-muted mt-md">Graded on {{ submission.graded_at[:16] if submission.graded_at else '—' }}</p>
+            </div>
+            {% endif %}
+
+            <div class="card mt-lg">
+                <h2>{% if submission %}Your Submission{% else %}Submit Assignment{% endif %}</h2>
+                {% if submission %}
+                <div class="submission-body">
+                    <p>{{ submission.answer }}</p>
+                    <p class="text-muted">Submitted on {{ submission.submitted_at[:16] }}</p>
+                </div>
+                {% endif %}
+
+                {% if is_open %}
+                <form method="POST" class="mt-md">
+                    <div class="form-group">
+                        <label for="answer">{% if submission %}Update your answer{% else %}Your answer{% endif %}</label>
+                        <textarea id="answer" name="answer" rows="8" required class="form-control" placeholder="Type your assignment answer here…">{% if submission %}{{ submission.answer }}{% endif %}</textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">{% if submission %}Resubmit{% else %}Submit{% endif %}</button>
+                </form>
+                {% elif not submission %}
+                <p class="empty-state">The deadline has passed. You can no longer submit this assignment.</p>
+                {% elif submission.score is none %}
+                <p class="text-muted mt-md">Deadline passed. Your submission is locked while awaiting grading.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

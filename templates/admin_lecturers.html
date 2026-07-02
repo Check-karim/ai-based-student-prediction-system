@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}Manage Lecturers — {{ university_short }}{% endblock %}
+
+{% block content %}
+<section class="page-header page-header-admin">
+    <div class="container page-header-row">
+        <div>
+            <h1>Manage Lecturers</h1>
+            <p>Create lecturer accounts so they can log in and manage their classes</p>
+        </div>
+        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline btn-sm">← Admin Overview</a>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="admin-grid">
+            <div class="card">
+                <h2>Create Lecturer Account</h2>
+                <p class="card-subtitle">Lecturers cannot self-register. Employee IDs are assigned automatically (e.g. EMP-2026-001).</p>
+                <form method="POST" class="form-grid form-grid-2">
+                    <div class="form-group">
+                        <label for="full_name">Full Name</label>
+                        <input type="text" id="full_name" name="full_name" required class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" required class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="department">Department</label>
+                        <select id="department" name="department" required class="form-control">
+                            <option value="">Select department…</option>
+                            {% for dept in mku_departments %}
+                            <option value="{{ dept }}">{{ dept }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required minlength="6" class="form-control">
+                    </div>
+                    <div class="form-group form-group-full">
+                        <button type="submit" class="btn btn-primary">Create Lecturer</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card">
+                <h2>Registered Lecturers</h2>
+                {% if lecturers %}
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Username</th>
+                                <th>Employee ID</th>
+                                <th>Department</th>
+                                <th>Joined</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for lecturer in lecturers %}
+                            <tr>
+                                <td>{{ lecturer.full_name }}</td>
+                                <td>{{ lecturer.username }}</td>
+                                <td>{{ lecturer.employee_id or '—' }}</td>
+                                <td>{{ lecturer.department or '—' }}</td>
+                                <td>{{ lecturer.created_at[:10] }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="empty-state">No lecturers created yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

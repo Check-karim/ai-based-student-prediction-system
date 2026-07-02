@@ -25,9 +25,14 @@
                 {% if session.get('user_id') %}
                     {% if session.get('role') == 'admin' %}
                         <li><a href="{{ url_for('admin_dashboard') }}" class="{% if request.endpoint == 'admin_dashboard' %}active{% endif %}">Overview</a></li>
+                        <li><a href="{{ url_for('admin_lecturers') }}" class="{% if request.endpoint == 'admin_lecturers' %}active{% endif %}">Lecturers</a></li>
+                        <li><a href="{{ url_for('admin_classes') }}" class="{% if request.endpoint == 'admin_classes' %}active{% endif %}">Classes</a></li>
                         <li><a href="{{ url_for('admin_predict') }}" class="{% if request.endpoint == 'admin_predict' %}active{% endif %}">Predict</a></li>
+                    {% elif session.get('role') == 'lecturer' %}
+                        <li><a href="{{ url_for('lecturer_dashboard') }}" class="{% if request.endpoint and request.endpoint.startswith('lecturer') %}active{% endif %}">My Classes</a></li>
                     {% else %}
                         <li><a href="{{ url_for('student_dashboard') }}" class="{% if request.endpoint == 'student_dashboard' %}active{% endif %}">Dashboard</a></li>
+                        <li><a href="{{ url_for('student_assignments') }}" class="{% if request.endpoint and request.endpoint.startswith('student_assignment') %}active{% endif %}">Assignments</a></li>
                     {% endif %}
                     <li><a href="{{ url_for('logout') }}" class="btn btn-outline btn-sm">Logout</a></li>
                 {% else %}

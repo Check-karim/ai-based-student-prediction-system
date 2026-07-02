@@ -11,18 +11,15 @@
             </div>
             <form method="POST" class="auth-form" id="registerForm" novalidate>
                 <div class="form-row">
-                    <div class="form-group">
+                    <div class="form-group form-group-full">
                         <label for="full_name">Full Name</label>
                         <input type="text" id="full_name" name="full_name" placeholder="John Doe"
                                pattern="^[a-zA-Z\s]+$" title="Letters and spaces only"
                                required>
                         <span class="field-hint">Letters and spaces only — no numbers or special characters</span>
                     </div>
-                    <div class="form-group">
-                        <label for="student_id">Student ID</label>
-                        <input type="text" id="student_id" name="student_id" placeholder="MKU-2026-001" required>
-                    </div>
                 </div>
+                <p class="field-hint auth-id-note">Your Student ID (e.g. MKU-2026-001) will be assigned automatically after registration.</p>
                 <div class="form-row">
                     <div class="form-group">
                         <label for="username">Username</label>

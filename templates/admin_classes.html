@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}Manage Classes — {{ university_short }}{% endblock %}
+
+{% block content %}
+<section class="page-header page-header-admin">
+    <div class="container page-header-row">
+        <div>
+            <h1>Manage Classes</h1>
+            <p>Create classes and assign them to lecturers</p>
+        </div>
+        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline btn-sm">← Admin Overview</a>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="admin-grid">
+            <div class="card">
+                <h2>Create Class</h2>
+                <p class="card-subtitle">Class codes are assigned automatically (e.g. CLS-2026-001)</p>
+                {% if lecturers %}
+                <form method="POST" class="form-grid form-grid-2">
+                    <div class="form-group">
+                        <label for="name">Class Name</label>
+                        <input type="text" id="name" name="name" required class="form-control" placeholder="e.g. BSc IT Year 2">
+                    </div>
+                    <div class="form-group">
+                        <label for="department">Department</label>
+                        <select id="department" name="department" required class="form-control">
+                            <option value="">Select department…</option>
+                            {% for dept in mku_departments %}
+                            <option value="{{ dept }}">{{ dept }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="lecturer_id">Assigned Lecturer</label>
+                        <select id="lecturer_id" name="lecturer_id" required class="form-control">
+                            <option value="">Select lecturer…</option>
+                            {% for lecturer in lecturers %}
+                            <option value="{{ lecturer.id }}">{{ lecturer.full_name }} ({{ lecturer.username }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="academic_year">Academic Year</label>
+                        <input type="text" id="academic_year" name="academic_year" class="form-control" placeholder="e.g. 2025/2026">
+                    </div>
+                    <div class="form-group">
+                        <label for="semester">Semester</label>
+                        <input type="text" id="semester" name="semester" class="form-control" placeholder="e.g. Semester 1">
+                    </div>
+                    <div class="form-group form-group-full">
+                        <button type="submit" class="btn btn-primary">Create Class</button>
+                    </div>
+                </form>
+                {% else %}
+                <p class="empty-state">Create at least one lecturer before adding classes.</p>
+                <a href="{{ url_for('admin_lecturers') }}" class="btn btn-outline btn-sm">Create Lecturer</a>
+                {% endif %}
+            </div>
+
+            <div class="card">
+                <h2>All Classes</h2>
+                {% if classes %}
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Code</th>
+                                <th>Lecturer</th>
+                                <th>Students</th>
+                                <th>Department</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for cls in classes %}
+                            <tr>
+                                <td>{{ cls.name }}</td>
+                                <td>{{ cls.code }}</td>
+                                <td>{{ cls.lecturer_name }}</td>
+                                <td>{{ cls.student_count }}</td>
+                                <td>{{ cls.department or '—' }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="empty-state">No classes created yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -5,42 +5,113 @@
 <section class="page-header page-header-admin">
     <div class="container page-header-row">
         <div>
-            <h1>Admin Prediction Tool</h1>
-            <p>Run the same AI performance forecast used by {{ university_name }} students</p>
+            <h1>Run AI Prediction by Class</h1>
+            <p>Run predictions for all students in a class. Results are visible to each student by class or course.</p>
         </div>
         <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline btn-sm">Back to Overview</a>
     </div>
 </section>
 
 <section class="section">
-    <div class="container dashboard-grid">
-        <div class="dashboard-main">
-            <div class="card">
-                <h2>Run AI Prediction</h2>
-                <p class="card-subtitle">
-                    Enter academic metrics to simulate a student forecast. Useful for demos, advising scenarios, or validating model output.
-                </p>
-                {% include "_prediction_form.html" %}
+    <div class="container">
+        <div class="card">
+            <h2>Select Class</h2>
+            <form method="GET" class="form-grid form-grid-2">
+                <div class="form-group">
+                    <label for="class_id">Class</label>
+                    <select id="class_id" name="class_id" class="form-control" onchange="this.form.submit()">
+                        <option value="">Select a class…</option>
+                        {% for cls in classes %}
+                        <option value="{{ cls.id }}" {% if selected_class_id == cls.id %}selected{% endif %}>
+                            {{ cls.name }} ({{ cls.code }}) — {{ cls.lecturer_name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% if selected_class_id and courses %}
+                <div class="form-group">
+                    <label for="course_id">Course (optional)</label>
+                    <select id="course_id" name="course_id" class="form-control" onchange="this.form.submit()">
+                        <option value="">All courses (class-wide)</option>
+                        {% for course in courses %}
+                        <option value="{{ course.id }}" {% if selected_course_id == course.id %}selected{% endif %}>
+                            {{ course.name }} ({{ course.code }})
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% endif %}
+            </form>
+        </div>
+
+        {% if selected_class_id and class_info %}
+        <div class="card mt-lg">
+            <div class="page-header-row">
+                <div>
+                    <h2>{{ class_info.name }}</h2>
+                    <p class="card-subtitle">{{ students|length }} enrolled students · Lecturer: {{ class_info.lecturer_name }}</p>
+                </div>
+                {% if students %}
+                <form method="POST">
+                    <input type="hidden" name="class_id" value="{{ selected_class_id }}">
+                    {% if selected_course_id %}
+                    <input type="hidden" name="course_id" value="{{ selected_course_id }}">
+                    {% endif %}
+                    <button type="submit" class="btn btn-primary" onclick="return confirm('Run AI prediction for all {{ students|length }} students?')">
+                        Run Prediction for Class
+                    </button>
+                </form>
+                {% endif %}
             </div>
 
-            {% if prediction_result %}
-            {% include "_prediction_result.html" %}
+            {% if not students %}
+            <p class="empty-state">No students enrolled. The lecturer must assign students to this class first.</p>
             {% endif %}
         </div>
 
-        <aside class="dashboard-sidebar">
-            <div class="card profile-card">
-                <h3>Administrator</h3>
-                <dl class="profile-list">
-                    <dt>Name</dt><dd>{{ user.full_name or user.username }}</dd>
-                    <dt>Role</dt><dd>System Administrator</dd>
-                    <dt>Institution</dt><dd>{{ university_name }}</dd>
-                    <dt>Email</dt><dd>{{ user.email }}</dd>
-                </dl>
+        {% if results %}
+        <div class="card mt-lg">
+            <h2>Prediction Results</h2>
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Student ID</th>
+                            <th>Result</th>
+                            <th>Confidence</th>
+                            <th>Attendance</th>
+                            <th>GPA</th>
+                            <th>Assignments</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for r in results %}
+                        <tr>
+                            <td>{{ r.student_name or r.full_name }}</td>
+                            <td>{{ r.student_id or '—' }}</td>
+                            <td><span class="badge-result badge-{{ (r.result or r.predicted_result) | lower | replace(' ', '-') }}">{{ r.result or r.predicted_result }}</span></td>
+                            <td>{{ r.confidence or r.confidence_score }}%</td>
+                            <td>{{ r.inputs.attendance_rate if r.inputs else r.attendance_rate }}%</td>
+                            <td>{{ r.inputs.previous_gpa if r.inputs else r.previous_gpa }}</td>
+                            <td>{{ r.inputs.assignments_completed if r.inputs else r.assignments_completed }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
-
-            {% include "_prediction_history.html" %}
-        </aside>
+        </div>
+        {% endif %}
+        {% elif classes %}
+        <div class="card mt-lg">
+            <p class="empty-state">Select a class above to run predictions for enrolled students.</p>
+        </div>
+        {% else %}
+        <div class="card mt-lg">
+            <p class="empty-state">No classes available. Create classes and enroll students first.</p>
+            <a href="{{ url_for('admin_classes') }}" class="btn btn-outline btn-sm">Manage Classes</a>
+        </div>
+        {% endif %}
     </div>
 </section>
 {% endblock %}

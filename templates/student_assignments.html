@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}My Assignments — {{ university_short }}{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container page-header-row">
+        <div>
+            <h1>My Assignments</h1>
+            <p>View available assignments, submit your work, and check your marks</p>
+        </div>
+        <a href="{{ url_for('student_dashboard') }}" class="btn btn-outline btn-sm">← Dashboard</a>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="card">
+            <form method="GET" class="form-group" style="max-width: 320px;">
+                <label for="class_id">Filter by Class</label>
+                <select id="class_id" name="class_id" class="form-control" onchange="this.form.submit()">
+                    <option value="">All classes</option>
+                    {% for cls in classes %}
+                    <option value="{{ cls.id }}" {% if filter_class_id == cls.id %}selected{% endif %}>
+                        {{ cls.name }} ({{ cls.code }})
+                    </option>
+                    {% endfor %}
+                </select>
+            </form>
+
+            {% if assignments %}
+            <div class="table-wrapper mt-md">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Assignment</th>
+                            <th>Course</th>
+                            <th>Class</th>
+                            <th>Deadline</th>
+                            <th>Status</th>
+                            <th>Mark</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for a in assignments %}
+                        <tr>
+                            <td>{{ a.title }}</td>
+                            <td>{{ a.course_name }}</td>
+                            <td>{{ a.class_name }}</td>
+                            <td>{{ a.deadline[:16] }}</td>
+                            <td>
+                                <span class="badge-result badge-status-{{ a.status | lower }}">{{ a.status }}</span>
+                            </td>
+                            <td>
+                                {% if a.score is not none %}
+                                {{ a.score }} / {{ a.max_score }}
+                                {% else %}—{% endif %}
+                            </td>
+                            <td>
+                                <a href="{{ url_for('student_assignment', assignment_id=a.id) }}" class="btn btn-outline btn-sm">
+                                    {% if a.status == 'Open' %}Do Assignment{% elif a.status == 'Submitted' %}View{% elif a.status == 'Graded' %}View Mark{% else %}View{% endif %}
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="empty-state mt-md">No assignments available. Your lecturer will publish assignments for your enrolled classes.</p>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -9,6 +9,8 @@
             <p>{{ university_name }} — system overview and student analytics</p>
         </div>
         <div class="report-actions">
+            <a href="{{ url_for('admin_lecturers') }}" class="btn btn-outline btn-sm">Lecturers</a>
+            <a href="{{ url_for('admin_classes') }}" class="btn btn-outline btn-sm">Classes</a>
             <a href="{{ url_for('admin_predict') }}" class="btn btn-outline btn-sm">Run Prediction</a>
             <a href="{{ url_for('admin_download_report', report_format='excel') }}" class="btn btn-outline btn-sm">
                 Download Excel
@@ -26,6 +28,14 @@
             <div class="stat-card">
                 <span class="stat-card-value">{{ stats.student_count }}</span>
                 <span class="stat-card-label">Registered Students</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-card-value">{{ stats.lecturer_count }}</span>
+                <span class="stat-card-label">Lecturers</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-card-value">{{ stats.class_count }}</span>
+                <span class="stat-card-label">Classes</span>
             </div>
             <div class="stat-card">
                 <span class="stat-card-value">{{ stats.prediction_count }}</span>
@@ -85,9 +95,8 @@
                             <tr>
                                 <th>Student</th>
                                 <th>Result</th>
+                                <th>Class</th>
                                 <th>Confidence</th>
-                                <th>GPA</th>
-                                <th>Attendance</th>
                                 <th>Date</th>
                             </tr>
                         </thead>
@@ -96,9 +105,8 @@
                             <tr>
                                 <td>{{ pred.full_name or pred.username }}</td>
                                 <td><span class="badge-result badge-{{ pred.predicted_result | lower | replace(' ', '-') }}">{{ pred.predicted_result }}</span></td>
+                                <td>{{ pred.class_name or '—' }}</td>
                                 <td>{{ pred.confidence_score }}%</td>
-                                <td>{{ pred.previous_gpa }}</td>
-                                <td>{{ pred.attendance_rate }}%</td>
                                 <td>{{ pred.created_at[:10] }}</td>
                             </tr>
                             {% endfor %}

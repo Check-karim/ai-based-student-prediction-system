@@ -468,6 +468,14 @@ main {
     font-size: 0.85rem;
 }
 
+.auth-id-note {
+    margin-bottom: 1rem;
+    padding: 0.75rem 1rem;
+    background: var(--bg-alt);
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--primary);
+}
+
 /* Forms */
 .form-group {
     display: flex;
@@ -482,7 +490,8 @@ main {
 }
 
 .form-group input,
-.form-group select {
+.form-group select,
+.form-control {
     padding: 0.75rem 1rem;
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
@@ -490,10 +499,12 @@ main {
     font-family: inherit;
     transition: var(--transition);
     background: var(--surface);
+    width: 100%;
 }
 
 .form-group input:focus,
-.form-group select:focus {
+.form-group select:focus,
+.form-control:focus {
     outline: none;
     border-color: var(--primary);
     box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
@@ -793,6 +804,162 @@ main {
 .tier-risk { background: #fef2f2; border-left: 3px solid var(--risk); }
 .tier-average { background: #fffbeb; border-left: 3px solid var(--average); }
 .tier-high { background: #ecfdf5; border-left: 3px solid var(--high); }
+
+/* Class cards & utility */
+.class-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.class-grid-compact {
+    grid-template-columns: 1fr;
+}
+
+.class-card {
+    display: block;
+    padding: 1.25rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    color: inherit;
+    transition: var(--transition);
+}
+
+.class-card:hover {
+    border-color: var(--primary);
+    box-shadow: var(--shadow);
+}
+
+.class-card h3 {
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+}
+
+.class-code {
+    color: var(--primary);
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.class-meta {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+}
+
+.action-bar {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.inline-form {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    margin-top: 0.75rem;
+}
+
+.inline-form .form-control {
+    min-width: 220px;
+}
+
+.simple-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.simple-list li {
+    padding: 0.75rem;
+    background: var(--bg);
+    border-radius: var(--radius-sm);
+}
+
+.text-muted {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.mt-md { margin-top: 1rem; }
+.mt-lg { margin-top: 1.5rem; }
+
+.form-grid {
+    display: grid;
+    gap: 1rem;
+}
+
+.form-grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.form-group-full {
+    grid-column: 1 / -1;
+}
+
+.form-control-sm {
+    padding: 0.375rem 0.625rem;
+    font-size: 0.875rem;
+}
+
+textarea.form-control {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.assignment-description {
+    white-space: pre-wrap;
+    color: var(--text-muted);
+    line-height: 1.7;
+}
+
+.submission-card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background: var(--bg);
+}
+
+.submission-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.submission-body {
+    background: var(--surface);
+    border-radius: var(--radius-sm);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    white-space: pre-wrap;
+}
+
+.submission-grade-form {
+    margin-top: 0.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+}
+
+.grade-display {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.badge-status-open { background: #d1fae5; color: #065f46; }
+.badge-status-submitted { background: #dbeafe; color: #1e40af; }
+.badge-status-graded { background: #e0e7ff; color: #3730a3; }
+.badge-status-overdue { background: #fee2e2; color: #991b1b; }
 
 /* Footer */
 .footer {

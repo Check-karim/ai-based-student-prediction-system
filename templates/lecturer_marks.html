@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block title %}Marks — {{ class_info.name }}{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container page-header-row">
+        <div>
+            <h1>Course Marks</h1>
+            <p>{{ class_info.name }} ({{ class_info.code }})</p>
+        </div>
+        <a href="{{ url_for('lecturer_class_detail', class_id=class_info.id) }}" class="btn btn-outline btn-sm">← Back to Class</a>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="card">
+            <h2>Add Mark</h2>
+            {% if courses and students %}
+            <form method="POST" class="form-grid form-grid-2">
+                <div class="form-group">
+                    <label for="course_id">Course</label>
+                    <select id="course_id" name="course_id" required class="form-control">
+                        <option value="">Select course…</option>
+                        {% for course in courses %}
+                        <option value="{{ course.id }}">{{ course.name }} ({{ course.code }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="student_user_id">Student</label>
+                    <select id="student_user_id" name="student_user_id" required class="form-control">
+                        <option value="">Select student…</option>
+                        {% for student in students %}
+                        <option value="{{ student.id }}">{{ student.full_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" id="title" name="title" required class="form-control" placeholder="e.g. Midterm Exam">
+                </div>
+                <div class="form-group">
+                    <label for="mark_type">Type</label>
+                    <select id="mark_type" name="mark_type" class="form-control">
+                        <option value="assignment">Assignment</option>
+                        <option value="exam">Exam</option>
+                        <option value="quiz">Quiz</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="score">Score</label>
+                    <input type="number" id="score" name="score" step="0.01" min="0" required class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="max_score">Max Score</label>
+                    <input type="number" id="max_score" name="max_score" step="0.01" min="1" value="100" required class="form-control">
+                </div>
+                <div class="form-group form-group-full">
+                    <button type="submit" class="btn btn-primary">Save Mark</button>
+                </div>
+            </form>
+            {% else %}
+            <p class="empty-state">Add courses and enroll students before recording marks.</p>
+            {% endif %}
+        </div>
+
+        <div class="card mt-lg">
+            <h2>Recorded Marks</h2>
+            {% if marks %}
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Course</th>
+                            <th>Title</th>
+                            <th>Type</th>
+                            <th>Score</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for mark in marks %}
+                        <tr>
+                            <td>{{ mark.student_name }}</td>
+                            <td>{{ mark.course_name }}</td>
+                            <td>{{ mark.title }}</td>
+                            <td>{{ mark.mark_type | capitalize }}</td>
+                            <td>{{ mark.score }} / {{ mark.max_score }}</td>
+                            <td>{{ mark.created_at[:10] }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="empty-state">No marks recorded yet.</p>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

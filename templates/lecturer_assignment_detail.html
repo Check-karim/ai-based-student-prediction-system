@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}{{ assignment.title }} — Grade{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container page-header-row">
+        <div>
+            <h1>{{ assignment.title }}</h1>
+            <p>{{ assignment.course_name }} · {{ assignment.class_name }} · Deadline: {{ assignment.deadline[:16] }}</p>
+        </div>
+        <a href="{{ url_for('lecturer_assignments', class_id=assignment.class_id) }}" class="btn btn-outline btn-sm">← Back to Assignments</a>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        {% if assignment.description %}
+        <div class="card">
+            <h2>Instructions</h2>
+            <p class="assignment-description">{{ assignment.description }}</p>
+            <p class="text-muted">Max score: {{ assignment.max_score }}</p>
+        </div>
+        {% endif %}
+
+        <div class="card mt-lg">
+            <h2>Submissions ({{ submissions|length }})</h2>
+            {% if submissions %}
+            {% for s in submissions %}
+            <div class="submission-card">
+                <div class="submission-header">
+                    <div>
+                        <strong>{{ s.full_name }}</strong>
+                        <span class="text-muted">· {{ s.student_id or 'No ID' }} · Submitted {{ s.submitted_at[:16] }}</span>
+                    </div>
+                    {% if s.score is not none %}
+                    <span class="badge-result badge-high-performer">{{ s.score }} / {{ assignment.max_score }}</span>
+                    {% else %}
+                    <span class="badge-result badge-average">Awaiting grade</span>
+                    {% endif %}
+                </div>
+                <div class="submission-body">
+                    <p>{{ s.answer }}</p>
+                </div>
+                <form method="POST" class="form-grid form-grid-2 submission-grade-form">
+                    <input type="hidden" name="submission_id" value="{{ s.id }}">
+                    <div class="form-group">
+                        <label>Score (out of {{ assignment.max_score }})</label>
+                        <input type="number" name="score" step="0.01" min="0" max="{{ assignment.max_score }}"
+                               value="{{ s.score if s.score is not none else '' }}" required class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Feedback (optional)</label>
+                        <input type="text" name="feedback" value="{{ s.feedback or '' }}" class="form-control" placeholder="Comments for the student">
+                    </div>
+                    <div class="form-group form-group-full">
+                        <button type="submit" class="btn btn-primary btn-sm">Save Grade</button>
+                    </div>
+                </form>
+            </div>
+            {% endfor %}
+            {% else %}
+            <p class="empty-state">No submissions yet.</p>
+            {% endif %}
+        </div>
+
+        {% if missing %}
+        <div class="card mt-lg">
+            <h2>Not Submitted ({{ missing|length }})</h2>
+            <ul class="simple-list">
+                {% for student in missing %}
+                <li>{{ student.full_name }} ({{ student.student_id or '—' }})</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
